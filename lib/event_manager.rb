@@ -68,6 +68,9 @@ contents = CSV.open(
 
 times = Hash.new(0)
 
+days_array = %w[Su Mo Tu We Th Fr Sa]
+days = Hash.new(0)
+
 contents.each do |row|
   # name = row[:first_name]
   # zipcode = clean_zipcode(row[:zipcode])
@@ -75,7 +78,10 @@ contents.each do |row|
   # personal_letter = erb_template.result(binding)
   # id = row[0]
   # output_to_file(id, personal_letter)
-  times[convert_to_time(row[:regdate]).hour] += 1
+  time = convert_to_time(row[:regdate])
+  times[time.hour] += 1
+  days[days_array[Date.new(time.year, time.month, time.day).wday]] += 1
 end
 
 pp(times)
+pp(days)
