@@ -49,6 +49,14 @@ def clean_phone_number(number)
   "bad number"
 end
 
+def convert_to_time(regdate)
+  time_array = regdate.split
+  time_array = time_array[0].split("/") + time_array[1].split(":")
+  time_array[2] = "20" + time_array[2]
+  time_array = time_array.map(&:to_i)
+  Time.new(time_array[2], time_array[0], time_array[1], time_array[3], time_array[4])
+end
+
 contents = CSV.open(
   "event_attendees.csv",
   headers: true,
@@ -58,6 +66,8 @@ contents = CSV.open(
 template_letter = File.read("form_letter.erb")
 erb_template = ERB.new template_letter
 
+times = []
+
 contents.each do |row|
   name = row[:first_name]
   zipcode = clean_zipcode(row[:zipcode])
@@ -65,4 +75,8 @@ contents.each do |row|
   personal_letter = erb_template.result(binding)
   id = row[0]
   output_to_file(id, personal_letter)
+  times.append(convert_to_time(row[:regdate]))
 end
+
+average_register_time = times.reduce(0) { |acc, date| acc + date.hour } / times.size
+puts(average_register_time)
