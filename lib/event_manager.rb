@@ -30,6 +30,14 @@ def request_legislator_names(zipcode)
   end
 end
 
+def output_to_file(id, letter)
+  Dir.mkdir("output") unless Dir.exist?("output")
+  filename = "output/thanks_#{id}.html"
+  File.open(filename, "w") do |file|
+    file.puts letter
+  end
+end
+
 contents = CSV.open(
   "event_attendees.csv",
   headers: true,
@@ -43,9 +51,7 @@ contents.each do |row|
   name = row[:first_name]
   zipcode = clean_zipcode(row[:zipcode])
   legislator_names = request_legislator_names(zipcode)
-  puts "#{name} - #{zipcode} - #{legislator_names}"
-
   personal_letter = erb_template.result(binding)
-
-  puts personal_letter
+  id = row[0]
+  output_to_file(id, personal_letter)
 end
