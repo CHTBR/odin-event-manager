@@ -7,7 +7,7 @@ puts "EventManager initialized."
 
 def load_api_key(key_name)
   data = File.read "api_keys.yml"
-  data = YAML.load data
+  data = YAML.safe_load data
   data[key_name]
 end
 
@@ -20,13 +20,13 @@ def request_legislator_names(zipcode)
   civic_info.key = load_api_key("google-civic-info-key")
 
   begin
-    legislators = civic_info.representative_info_by_address(
+    civic_info.representative_info_by_address(
       address: zipcode,
       levels: "country",
-      roles: ["legislatorUpperBody", "legislatorLowerBody"]
+      roles: %w[legislatorUpperBody legislatorLowerBody]
     ).officials
-  rescue
-    'You can find your representatives by visiting www.commoncause.org/take-action/find-elected-officials'
+  rescue StandardError
+    "You can find your representatives by visiting www.commoncause.org/take-action/find-elected-officials"
   end
 end
 
