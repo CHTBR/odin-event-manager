@@ -9,3 +9,5 @@ gem "csv", "~> 3.3"
 gem "google-api-client", "~> 0.53.0"
 
 gem "yaml", "~> 0.3.0"
+
+gem "erb", "~> 4.0"
