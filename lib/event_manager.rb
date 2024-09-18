@@ -63,20 +63,19 @@ contents = CSV.open(
   header_converters: :symbol
 )
 
-template_letter = File.read("form_letter.erb")
-erb_template = ERB.new template_letter
+# template_letter = File.read("form_letter.erb")
+# erb_template = ERB.new template_letter
 
-times = []
+times = Hash.new(0)
 
 contents.each do |row|
-  name = row[:first_name]
-  zipcode = clean_zipcode(row[:zipcode])
-  legislator_names = request_legislator_names(zipcode)
-  personal_letter = erb_template.result(binding)
-  id = row[0]
-  output_to_file(id, personal_letter)
-  times.append(convert_to_time(row[:regdate]))
+  # name = row[:first_name]
+  # zipcode = clean_zipcode(row[:zipcode])
+  # legislator_names = request_legislator_names(zipcode)
+  # personal_letter = erb_template.result(binding)
+  # id = row[0]
+  # output_to_file(id, personal_letter)
+  times[convert_to_time(row[:regdate]).hour] += 1
 end
 
-average_register_time = times.reduce(0) { |acc, date| acc + date.hour } / times.size
-puts(average_register_time)
+pp(times)
