@@ -38,6 +38,17 @@ def output_to_file(id, letter)
   end
 end
 
+def clean_phone_number(number)
+  number = number.to_s
+  if number.size == 10
+    return number.to_i
+  elsif number.size == 11 && number[0] == 1
+    return number[1, 10].to_i
+  end
+
+  "bad number"
+end
+
 contents = CSV.open(
   "event_attendees.csv",
   headers: true,
